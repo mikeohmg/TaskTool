@@ -7,40 +7,38 @@ import {
   Modal,
   Image,
 } from "react-native";
+import Colors from "../assets/constants/colors";
+import PrimaryButton from "./ui/PrimaryButton";
 
 function TaskInput(props) {
-  const [enteredGoalText, setEnteredGoalText] = useState("");
+  const [enteredTaskText, setEnteredTaskText] = useState("");
 
-  function goalInputHandler(enteredText) {
-    setEnteredGoalText(enteredText);
+  function taskInputHandler(enteredText) {
+    setEnteredTaskText(enteredText);
   }
 
-  function addGoalHandler() {
-    props.onAddGoal(enteredGoalText);
-    setEnteredGoalText("");
+  function addTaskHandler() {
+    props.onAddTask(enteredTaskText);
+    setEnteredTaskText("");
   }
 
   return (
-    <Modal visible={props.visible} animationType="slide">
-      <View style={styles.inputContainer}>
-        <View style={styles.imageContainer}>
-          <Image
-            style={styles.image}
-            source={require("../assets/images/spot.png")}
+    <Modal visible={props.visible} animationType="slide" transparent={true}>
+      <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
+        <View style={styles.inputContainer}>
+          <TextInput
+            style={styles.textInput}
+            placeholder="Input New Baby Activity"
+            onChangeText={taskInputHandler}
+            value={enteredTaskText}
           />
-        </View>
-        <TextInput
-          style={styles.textInput}
-          placeholder="Input your task"
-          onChangeText={goalInputHandler}
-          value={enteredGoalText}
-        />
-        <View style={styles.buttonContainer}>
-          <View style={styles.button}>
-            <Button title="Add Task" onPress={addGoalHandler} />
-          </View>
-          <View style={styles.button}>
-            <Button title="Cancel" color="#f31282" onPress={props.onEndGoal} />
+          <View style={styles.buttonContainer}>
+            <View style={styles.button}>
+              <PrimaryButton onPress={addTaskHandler}>Add Task</PrimaryButton>
+            </View>
+            <View style={styles.button}>
+              <PrimaryButton onPress={props.onEndTask}>Cancel</PrimaryButton>
+            </View>
           </View>
         </View>
       </View>
@@ -52,18 +50,19 @@ export default TaskInput;
 
 const styles = StyleSheet.create({
   inputContainer: {
-    flex: 1,
+    width: "100%",
+    borderRadius: 10,
+    padding: 16,
     justifyContent: "center",
     alignItems: "center",
-    padding: 16,
-    backgroundColor: "#789fda",
+    backgroundColor: Colors.tertiary1,
   },
   textInput: {
     borderWidth: 1,
-    borderColor: "#cccccc",
+    borderColor: "white",
     width: "100%",
-    color: "#ffffff",
-    borderRadius: 6,
+    color: "white",
+    borderRadius: 10,
     padding: 16,
   },
   buttonContainer: {
@@ -73,10 +72,5 @@ const styles = StyleSheet.create({
   button: {
     width: "30%",
     marginHorizontal: 8,
-  },
-  image: {
-    width: 100,
-    height: 130,
-    margin: 20,
   },
 });

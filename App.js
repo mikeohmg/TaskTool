@@ -1,86 +1,102 @@
 import { useState } from "react";
-import { StyleSheet, View, FlatList, Button } from "react-native";
+import {
+  StyleSheet,
+  View,
+  FlatList,
+  Button,
+  ImageBackground,
+  SafeAreaView,
+} from "react-native";
 import GoalItem from "./components/TaskItem";
-import GoalInput from "./components/TaskInput";
+import TaskInput from "./components/TaskInput";
+import { LinearGradient } from "expo-linear-gradient";
+import PrimaryButton from "./components/ui/PrimaryButton";
+import Colors from "./assets/constants/colors";
 
 export default function App() {
   const [modalIsVisible, setModalVisible] = useState(false);
-  const [courseGoals, setCourseGoals] = useState([]);
+  const [babyTasks, setBabyTasks] = useState([]);
 
-  function startAddGoalHandler() {
+  function startAddTaskHandler() {
     setModalVisible(true);
   }
 
-  function endAddGoalHandler() {
+  function endAddTaskHandler() {
     setModalVisible(false);
   }
 
-  function addGoalHandler(enteredGoalText) {
-    setCourseGoals((prevCourseGoals) => [
-      ...prevCourseGoals,
+  function addTaskHandler(enteredGoalText) {
+    setBabyTasks((prevbabyTasks) => [
+      ...prevbabyTasks,
       { text: enteredGoalText, id: Math.random().toString() },
     ]);
-    endAddGoalHandler();
+    endAddTaskHandler();
   }
 
-  function deleteGoalHandler(id) {
-    setCourseGoals((prevCourseGoals) => {
-      return prevCourseGoals.filter((goal) => goal.id !== id);
+  function deleteTasksHandler(id) {
+    setBabyTasks((prevbabyTasks) => {
+      return prevbabyTasks.filter((goal) => goal.id !== id);
     });
   }
 
   return (
-    <View style={styles.appContainer}>
-      <Button title="Add New Task" onPress={startAddGoalHandler} />
-      {modalIsVisible && (
-        <GoalInput
-          visible={modalIsVisible}
-          onAddGoal={addGoalHandler}
-          onEndGoal={endAddGoalHandler}
-        />
-      )}
-      <View style={styles.goalsContainer}>
-        <FlatList
-          data={courseGoals}
-          renderItem={(itemData) => {
-            return (
-              <GoalItem
-                text={itemData.item.text}
-                id={itemData.item.id}
-                onDeleteItem={deleteGoalHandler}
+    <LinearGradient
+      colors={[Colors.primary1, "white"]}
+      style={styles.rootScreen}
+    >
+      <ImageBackground
+        source={require("./assets/images/background.jpg")}
+        resizeMode="cover"
+        style={styles.rootScreen}
+        imageStyle={styles.backgroundImage}
+      >
+        <SafeAreaView style={styles.rootScreen}>
+          <View style={styles.buttonContainer}>
+            <PrimaryButton onPress={startAddTaskHandler}>
+              Add New Baby Activity
+            </PrimaryButton>
+            {modalIsVisible && (
+              <TaskInput
+                visible={modalIsVisible}
+                onAddTask={addTaskHandler}
+                onEndTask={endAddTaskHandler}
               />
-            );
-          }}
-          keyExtractor={(item, index) => {
-            return item.id;
-          }}
-        />
-      </View>
-    </View>
+            )}
+            <View style={styles.goalsContainer}>
+              <FlatList
+                data={babyTasks}
+                renderItem={(itemData) => {
+                  return (
+                    <GoalItem
+                      text={itemData.item.text}
+                      id={itemData.item.id}
+                      onDeleteItem={deleteTasksHandler}
+                    />
+                  );
+                }}
+                keyExtractor={(item, index) => {
+                  return item.id;
+                }}
+              />
+            </View>
+          </View>
+        </SafeAreaView>
+      </ImageBackground>
+    </LinearGradient>
   );
 }
 
 const styles = StyleSheet.create({
-  appContainer: {
+  rootScreen: {
     flex: 1,
-    paddingTop: 50,
-    paddingHorizontal: 16,
-    backgroundColor: "#789fda",
   },
-  inputContainer: {
+  backgroundImage: {
+    opacity: 0.15,
+  },
+  buttonContainer: {
     flex: 1,
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
-    marginBottom: 24,
-    borderBottomWidth: 1,
-  },
-  textInput: {
-    width: "70%",
-    marginRight: 8,
-    padding: 8,
-  },
-  goalsContainer: {
-    flex: 5,
+    justifyContent: "center",
+    padding: 16,
+    borderRadius: 8,
   },
 });
